@@ -375,7 +375,7 @@ function LeadsTable({ leads, onStageChange, onAddActivity, onEdit, onDelete, onA
 }
 
 export default function App() {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState(USERS[0]);
   const [leads, setLeads] = useState(INIT_LEADS);
   const [activeTab, setActiveTab] = useState("Pipeline");
   const [showForm, setShowForm] = useState(false);
@@ -392,7 +392,7 @@ export default function App() {
   const openAdd = () => { setEditLead(null); setShowForm(true); };
   const openEdit = (lead) => { setEditLead(lead); setShowForm(true); };
 
-  if (!user) return <LoginPage onLogin={handleLogin} />;
+  if (!user) return null;
 
   return (
     <div style={styles.app}>
