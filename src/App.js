@@ -382,10 +382,7 @@ export default function App() {
   const [editLead, setEditLead] = useState(null);
   const [deleteLead, setDeleteLead] = useState(null);
 
-  useEffect(() => {
-    if (user?.role === "sales" && activeTab === "Dashboard") setActiveTab("Pipeline");
-  }, [user]);
-
+  useEffect(() => {  if (user?.role === "sales" && activeTab === "Dashboard") {    setActiveTab("Pipeline");  }}, [user, activeTab]);
   const handleLogin = (u) => { setUser(u); setActiveTab(u.role === "admin" ? "Dashboard" : "Pipeline"); };
   const handleStageChange = (id, stage) => setLeads(prev => prev.map(l => l.id === id ? { ...l, stage } : l));
   const handleAddActivity = (id, activity) => setLeads(prev => prev.map(l => l.id === id ? { ...l, activities: [...l.activities, activity] } : l));
