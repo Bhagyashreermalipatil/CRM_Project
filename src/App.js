@@ -3,11 +3,8 @@ import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell,
 } from "recharts";
 
-const USERS = [
-  { id: 1, name: "Admin User", email: "admin@crm.com", password: "admin123", role: "admin" },
-  { id: 2, name: "Alice Sales", email: "alice@crm.com", password: "alice123", role: "sales" },
-  { id: 3, name: "Bob Sales", email: "bob@crm.com", password: "bob123", role: "sales" },
-];
+// ADD THIS INSTEAD:
+const USERS = [];
 
 const STAGES = ["New", "Contacted", "Qualified", "Closed"];
 const REPS = ["Admin User", "Alice Sales", "Bob Sales"];
@@ -155,10 +152,18 @@ function LoginPage({ onLogin }) {
   const [error, setError] = useState("");
 
   const handleLogin = () => {
-    const user = USERS.find(u => u.email === email && u.password === password);
-    if (user) onLogin(user);
-    else setError("Invalid email or password");
-  };
+  if (!email || !password) {
+    setError("Enter email and password");
+    return;
+  }
+
+  onLogin({
+    id: Date.now(),
+    name: email.split("@")[0],
+    email: email,
+    role: "admin",
+  });
+};
 
   return (
     <div style={styles.loginWrap}>
