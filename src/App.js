@@ -375,7 +375,12 @@ function LeadsTable({ leads, onStageChange, onAddActivity, onEdit, onDelete, onA
 }
 
 export default function App() {
-  const [user, setUser] = useState(USERS[0]);
+  const [user, setUser] = useState({
+  id: 999,
+  name: "Guest User",
+  email: "guest@crm.com",
+  role: "admin",
+});
   const [leads, setLeads] = useState(INIT_LEADS);
   const [activeTab, setActiveTab] = useState("Pipeline");
   const [showForm, setShowForm] = useState(false);
