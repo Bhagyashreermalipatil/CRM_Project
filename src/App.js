@@ -183,7 +183,7 @@ function LoginPage({ onLogin }) {
           <input style={styles.input} type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="••••••••" onKeyDown={e => e.key === "Enter" && handleLogin()} />
         </div>
         <button style={styles.loginBtn} onClick={handleLogin}>Sign in →</button>
-        <div style={{ marginTop: 24, background: "#f8fafc", borderRadius: 8, padding: "12px 14px" }}>
+        <div>
           <p style={{ fontSize: 12, fontWeight: 600, color: "#6b7280", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 6 }}>Demo accounts</p>
           <p style={{ fontSize: 12, color: "#374151", margin: "3px 0" }}><b>admin@crm.com</b> / admin123 · Admin</p>
           <p style={{ fontSize: 12, color: "#374151", margin: "3px 0" }}><b>alice@crm.com</b> / alice123 · Sales Rep</p>
