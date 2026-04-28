@@ -150,21 +150,19 @@ function LoginPage({ onLogin }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-
   const handleLogin = () => {
-  if (!email || !password) {
-    setError("Enter email and password");
-    return;
-  }
+    if (!email || !password) {
+      setError("Enter email and password");
+      return;
+    }
 
-  onLogin({
-    id: Date.now(),
-    name: email.split("@")[0],
-    email: email,
-    role: "admin",
-  });
-};
-
+    onLogin({
+      id: Date.now(),
+      name: email.split("@")[0],
+      email,
+      role: "admin",
+    });
+  };
   return (
     <div style={styles.loginWrap}>
       <div style={styles.loginCard}>
