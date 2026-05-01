@@ -3,8 +3,8 @@ import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell,
 } from "recharts";
 
-// ADD THIS INSTEAD:
-const USERS = [];
+const getUsers = () => JSON.parse(localStorage.getItem('crm_users') || '[]');
+const saveUsers = (users) => localStorage.setItem('crm_users', JSON.stringify(users));
 
 const STAGES = ["New", "Contacted", "Qualified", "Closed"];
 const REPS = ["Admin User", "Alice Sales", "Bob Sales"];
@@ -151,18 +151,39 @@ function LoginPage({ onLogin }) {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const handleLogin = () => {
-    if (!email || !password) {
-      setError("Enter email and password");
-      return;
-    }
+  if (!email || !password) {
+    setError("Enter email and password");
+    return;
+  }
+  const users = getUsers();
+  const found = users.find(u => u.email === email && u.password === password);
+  if (found) {
+    onLogin({ id: found.id, name: found.name, email: found.email, role: found.role });
+  } else {
+    setError("Invalid email or password");
+  }
+};
 
-    onLogin({
-      id: Date.now(),
-      name: email.split("@")[0],
-      email,
-      role: "admin",
-    });
+const handleRegister = () => {
+  if (!email || !password) {
+    setError("Enter email and password");
+    return;
+  }
+  const users = getUsers();
+  if (users.find(u => u.email === email)) {
+    setError("Email already registered!");
+    return;
+  }
+  const newUser = {
+    id: Date.now(),
+    name: email.split("@")[0],
+    email,
+    password,
+    role: "admin"
   };
+  saveUsers([...users, newUser]);
+  onLogin(newUser);
+};
   return (
     <div style={styles.loginWrap}>
       <div style={styles.loginCard}>
@@ -181,6 +202,7 @@ function LoginPage({ onLogin }) {
           <input style={styles.input} type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="••••••••" onKeyDown={e => e.key === "Enter" && handleLogin()} />
         </div>
         <button style={styles.loginBtn} onClick={handleLogin}>Sign in →</button>
+<button style={{...styles.loginBtn, background: '#10b981', marginTop: 10}} onClick={handleRegister}>Register →</button>
         <div>
           <p style={{ fontSize: 12, fontWeight: 600, color: "#6b7280", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 6 }}>Demo accounts</p>
           <p style={{ fontSize: 12, color: "#374151", margin: "3px 0" }}><b>admin@crm.com</b> / admin123 · Admin</p>
