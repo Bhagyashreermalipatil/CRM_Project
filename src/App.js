@@ -23,7 +23,21 @@ const INIT_LEADS = [
 
 const EMPTY_FORM = { name: "", email: "", company: "", value: "", stage: "New", rep: "Alice Sales" };
 const fmtCurrency = (v) => "₹" + (v >= 100000 ? (v / 100000).toFixed(1) + "L" : Number(v).toLocaleString("en-IN"));
-
+function Field({ label, field, type = "text", options, form, setForm, errors }) {
+  return (
+    <div style={styles.field}>
+      <label style={styles.label}>{label}</label>
+      {options ? (
+        <select style={styles.input} value={form[field]} onChange={e => setForm(f => ({ ...f, [field]: e.target.value }))}>
+          {options.map(o => <option key={o}>{o}</option>)}
+        </select>
+      ) : (
+        <input style={{ ...styles.input, ...(errors[field] ? { borderColor: "#f87171" } : {}) }} type={type} value={form[field]} onChange={e => setForm(f => ({ ...f, [field]: e.target.value }))} />
+      )}
+      {errors[field] && <p style={styles.fieldError}>{errors[field]}</p>}
+    </div>
+  );
+}
 function LeadFormModal({ lead, onClose, onSave, user }) {
   const [form, setForm] = useState(lead ? { name: lead.name, email: lead.email, company: lead.company, value: lead.value, stage: lead.stage, rep: lead.rep } : { ...EMPTY_FORM, rep: user.name });
   const [errors, setErrors] = useState({});
@@ -44,19 +58,19 @@ function LeadFormModal({ lead, onClose, onSave, user }) {
     onClose();
   };
 
-  const Field = ({ label, field, type = "text", options }) => (
-    <div style={styles.field}>
-      <label style={styles.label}>{label}</label>
-      {options ? (
-        <select style={styles.input} value={form[field]} onChange={e => setForm(f => ({ ...f, [field]: e.target.value }))}>
-          {options.map(o => <option key={o}>{o}</option>)}
-        </select>
-      ) : (
-        <input style={{ ...styles.input, ...(errors[field] ? { borderColor: "#f87171" } : {}) }} type={type} value={form[field]} onChange={e => setForm(f => ({ ...f, [field]: e.target.value }))} />
-      )}
-      {errors[field] && <p style={styles.fieldError}>{errors[field]}</p>}
-    </div>
-  );
+  const Field = ({ label, field, type = "text", options, form, setForm, errors }) => (
+  <div style={styles.field}>
+    <label style={styles.label}>{label}</label>
+    {options ? (
+      <select style={styles.input} value={form[field]} onChange={e => setForm(f => ({ ...f, [field]: e.target.value }))}>
+        {options.map(o => <option key={o}>{o}</option>)}
+      </select>
+    ) : (
+      <input style={{ ...styles.input, ...(errors[field] ? { borderColor: "#f87171" } : {}) }} type={type} value={form[field]} onChange={e => setForm(f => ({ ...f, [field]: e.target.value }))} />
+    )}
+    {errors[field] && <p style={styles.fieldError}>{errors[field]}</p>}
+  </div>
+);
 
   return (
     <div style={styles.modalOverlay} onClick={onClose}>
