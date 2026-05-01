@@ -57,21 +57,6 @@ function LeadFormModal({ lead, onClose, onSave, user }) {
     onSave({ ...form, value: Number(form.value) });
     onClose();
   };
-
-  const Field = ({ label, field, type = "text", options, form, setForm, errors }) => (
-  <div style={styles.field}>
-    <label style={styles.label}>{label}</label>
-    {options ? (
-      <select style={styles.input} value={form[field]} onChange={e => setForm(f => ({ ...f, [field]: e.target.value }))}>
-        {options.map(o => <option key={o}>{o}</option>)}
-      </select>
-    ) : (
-      <input style={{ ...styles.input, ...(errors[field] ? { borderColor: "#f87171" } : {}) }} type={type} value={form[field]} onChange={e => setForm(f => ({ ...f, [field]: e.target.value }))} />
-    )}
-    {errors[field] && <p style={styles.fieldError}>{errors[field]}</p>}
-  </div>
-);
-
   return (
     <div style={styles.modalOverlay} onClick={onClose}>
       <div style={styles.modal} onClick={e => e.stopPropagation()}>
@@ -80,12 +65,12 @@ function LeadFormModal({ lead, onClose, onSave, user }) {
           <button style={styles.closeBtn} onClick={onClose}>✕</button>
         </div>
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0 16px" }}>
-          <Field label="Full Name" field="name" />
-          <Field label="Email" field="email" type="email" />
-          <Field label="Company" field="company" />
-          <Field label="Deal Value (₹)" field="value" type="number" />
-          <Field label="Stage" field="stage" options={STAGES} />
-          {user.role === "admin" && <Field label="Assigned Rep" field="rep" options={REPS} />}
+        <Field label="Full Name" field="name" form={form} setForm={setForm} errors={errors} />
+          <Field label="Email" field="email" type="email" form={form} setForm={setForm} errors={errors} />
+          <Field label="Company" field="company" form={form} setForm={setForm} errors={errors} />
+          <Field label="Deal Value (₹)" field="value" type="number" form={form} setForm={setForm} errors={errors} />
+          <Field label="Stage" field="stage" options={STAGES} form={form} setForm={setForm} errors={errors} />
+          {user.role === "admin" && <Field label="Assigned Rep" field="rep" options={REPS} form={form} setForm={setForm} errors={errors} />}  
         </div>
         <div style={{ display: "flex", gap: 10, justifyContent: "flex-end", marginTop: 20, borderTop: "1px solid #e5e7eb", paddingTop: 16 }}>
           <button style={styles.cancelBtn} onClick={onClose}>Cancel</button>
