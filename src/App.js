@@ -453,3 +453,4 @@ const styles = {
   deleteBtn: { background: "#fef2f2", color: "#dc2626", border: "1px solid #fecaca", borderRadius: 6, padding: "4px 10px", fontSize: 12, cursor: "pointer", fontWeight: 500 },
   viewBtn: { background: "#eff6ff", color: "#185FA5", border: "1px solid #bfdbfe", borderRadius: 6, padding: "4px 10px", fontSize: 12, cursor: "pointer", fontWeight: 500 },
 };
+export default App;
