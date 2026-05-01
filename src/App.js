@@ -400,7 +400,41 @@ function LeadsTable({ leads, onStageChange, onAddActivity, onEdit, onDelete, onA
   );
 }
 
-const [user, setUser] = useState(null);
+export default function App() {
+  const [user, setUser] = useState(null);
+  const [leads, setLeads] = useState(INIT_LEADS);
+  const [activeTab, setActiveTab] = useState("Pipeline");
+  const [showForm, setShowForm] = useState(false);
+  const [editLead, setEditLead] = useState(null);
+  const [deleteLead, setDeleteLead] = useState(null);
+
+  useEffect(() => { if (user?.role === "sales" && activeTab === "Dashboard") { setActiveTab("Pipeline"); } }, [user, activeTab]);
+  const handleLogin = (u) => { setUser(u); setActiveTab(u.role === "admin" ? "Dashboard" : "Pipeline"); };
+  const handleStageChange = (id, stage) => setLeads(prev => prev.map(l => l.id === id ? { ...l, stage } : l));
+  const handleAddActivity = (id, activity) => setLeads(prev => prev.map(l => l.id === id ? { ...l, activities: [...l.activities, activity] } : l));
+  const handleAddLead = (form) => setLeads(prev => [...prev, { ...form, id: Date.now(), activities: [] }]);
+  const handleEditLead = (form) => setLeads(prev => prev.map(l => l.id === editLead.id ? { ...l, ...form } : l));
+  const handleDeleteLead = (id) => setLeads(prev => prev.filter(l => l.id !== id));
+  const openAdd = () => { setEditLead(null); setShowForm(true); };
+  const openEdit = (lead) => { setEditLead(lead); setShowForm(true); };
+
+  if (!user) return <LoginPage onLogin={handleLogin} />;
+
+  return (
+    <div style={styles.app}>
+      <Navbar user={user} activeTab={activeTab} setActiveTab={setActiveTab} onLogout={() => setUser(null)} />
+      <main style={styles.main}>
+        {activeTab === "Dashboard" && <Dashboard leads={leads} />}
+        {activeTab === "Pipeline" && <Pipeline leads={leads} onStageChange={handleStageChange} onEdit={openEdit} onDelete={setDeleteLead} onAdd={openAdd} user={user} />}
+        {activeTab === "Leads" && <LeadsTable leads={leads} onStageChange={handleStageChange} onAddActivity={handleAddActivity} onEdit={openEdit} onDelete={setDeleteLead} onAdd={openAdd} user={user} />}
+      </main>
+      {showForm && <LeadFormModal lead={editLead} user={user} onClose={() => { setShowForm(false); setEditLead(null); }} onSave={editLead ? handleEditLead : handleAddLead} />}
+      {deleteLead && <DeleteModal lead={deleteLead} onClose={() => setDeleteLead(null)} onConfirm={handleDeleteLead} />}
+    </div>
+  );
+}
+
+
 const styles = {
   app: { minHeight: "100vh", background: "#f3f4f6", fontFamily: "'DM Sans', 'Segoe UI', sans-serif" },
   main: { maxWidth: 1200, margin: "0 auto", padding: "24px 16px" },
@@ -453,4 +487,3 @@ const styles = {
   deleteBtn: { background: "#fef2f2", color: "#dc2626", border: "1px solid #fecaca", borderRadius: 6, padding: "4px 10px", fontSize: 12, cursor: "pointer", fontWeight: 500 },
   viewBtn: { background: "#eff6ff", color: "#185FA5", border: "1px solid #bfdbfe", borderRadius: 6, padding: "4px 10px", fontSize: 12, cursor: "pointer", fontWeight: 500 },
 };
-export default App;
